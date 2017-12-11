@@ -1,0 +1,74 @@
+LIBRARY ieee;
+USE ieee.std_logic_1164.all;
+
+ENTITY gerador_paridade IS
+
+	GENERIC
+	(
+		NUM_DADOS : natural := 9
+	);
+
+	PORT
+	(
+		DATA_IN : IN STD_LOGIC_VECTOR (NUM_DADOS DOWNTO 0);
+		SW_PARITY_TX : IN STD_LOGIC;
+		PARITY : OUT STD_LOGIC	
+	);
+
+END ENTITY;
+
+ARCHITECTURE v1 OF gerador_paridade IS
+
+--COMPONENT gerador_paridade_component IS
+--	GENERIC
+--	(
+--		NUM_DADOS : natural := 10
+--	);
+--
+--	PORT
+--	(
+--		DATA_IN : IN STD_LOGIC_VECTOR (NUM_DADOS DOWNTO 0);
+--		SW_PARITY_TX : IN STD_LOGIC;
+--		PARITY : OUT STD_LOGIC	
+--	);
+--END COMPONENT;
+
+SIGNAL NUM_1, RESTO : INTEGER;
+
+BEGIN
+
+PROCESS (DATA_IN, NUM_1, RESTO, SW_PARITY_TX)
+BEGIN
+
+NUM_1 <= 0;
+RESTO <= 0;
+PARITY <= '0';
+
+FOR i IN 0 TO NUM_DADOS LOOP
+	IF (DATA_IN(i)='1') THEN
+		NUM_1 <= NUM_1 + 1;
+	END IF;
+END LOOP;
+
+	RESTO <= NUM_1 rem 2;
+	
+	IF (SW_PARITY_TX = '0') THEN
+		IF (RESTO = 0) THEN
+			PARITY <= '0';
+		ELSE
+			PARITY <= '1';
+		END IF;
+	END IF;
+	IF(SW_PARITY_TX = '1') THEN
+		IF (RESTO = 0) THEN
+			PARITY <= '1';
+		ELSE
+			PARITY <= '0';
+		END IF;
+	END IF;
+	
+END PROCESS;
+
+--test1 : gerador_paridade_component PORT MAP (DATA_IN, SW_PARITY_TX, PARITY);
+
+END ARCHITECTURE;
