@@ -1,5 +1,6 @@
 LIBRARY ieee;
 USE ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
 
 ENTITY gerador_paridade IS
 
@@ -12,63 +13,46 @@ ENTITY gerador_paridade IS
 	(
 		DATA_IN : IN STD_LOGIC_VECTOR (NUM_DADOS DOWNTO 0);
 		SW_PARITY_TX : IN STD_LOGIC;
-		PARITY : OUT STD_LOGIC	
+		PARITY : OUT STD_LOGIC_vector(0 downto 0)
 	);
 
 END ENTITY;
 
 ARCHITECTURE v1 OF gerador_paridade IS
 
---COMPONENT gerador_paridade_component IS
---	GENERIC
---	(
---		NUM_DADOS : natural := 10
---	);
---
---	PORT
---	(
---		DATA_IN : IN STD_LOGIC_VECTOR (NUM_DADOS DOWNTO 0);
---		SW_PARITY_TX : IN STD_LOGIC;
---		PARITY : OUT STD_LOGIC	
---	);
---END COMPONENT;
-
-SIGNAL NUM_1, RESTO : INTEGER;
+SIGNAL NUM_1: INTEGER;
 
 BEGIN
 
-PROCESS (DATA_IN, NUM_1, RESTO, SW_PARITY_TX)
-BEGIN
-
-NUM_1 <= 0;
-RESTO <= 0;
-PARITY <= '0';
-
-FOR i IN 0 TO NUM_DADOS LOOP
-	IF (DATA_IN(i)='1') THEN
-		NUM_1 <= NUM_1 + 1;
-	END IF;
-END LOOP;
-
-	RESTO <= NUM_1 rem 2;
+	process(DATA_IN)
+	variable cont1, RESTO, paridade: natural;
+	begin
+		cont1 := 0;
+		resto := 0;
+		for i in DATA_IN'range loop
+			if (DATA_IN(i) = '1') then
+				cont1 := cont1 + 1;
+			end if;
+		end loop;
+		
+		RESTO := NUM_DADOS rem cont1;
+		
+		if(SW_PARITY_TX = '0') then 
+			if(RESTO = 0) then
+				paridade := 0;
+			else
+				paridade := 1;
+			end if;
+		elsif(SW_PARITY_TX = '1') then
+			if(resto = 0) then
+				paridade := 1;
+			else 
+				paridade := 0;
+			end if;
+		end if;
+		
+		parity <= std_logic_vector(to_unsigned(paridade,1));
 	
-	IF (SW_PARITY_TX = '0') THEN
-		IF (RESTO = 0) THEN
-			PARITY <= '0';
-		ELSE
-			PARITY <= '1';
-		END IF;
-	END IF;
-	IF(SW_PARITY_TX = '1') THEN
-		IF (RESTO = 0) THEN
-			PARITY <= '1';
-		ELSE
-			PARITY <= '0';
-		END IF;
-	END IF;
-	
-END PROCESS;
-
---test1 : gerador_paridade_component PORT MAP (DATA_IN, SW_PARITY_TX, PARITY);
+	end process;
 
 END ARCHITECTURE;
