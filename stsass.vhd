@@ -2,6 +2,7 @@ LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
 LIBRARY altera;
 USE altera.altera_standard_functions.ALL;
+
 ENTITY stsass IS
 	PORT (
 		clk50MHz, sw_rst, ser_in, sw_parit_rx, sw_parit_tx : IN std_logic;
@@ -18,14 +19,18 @@ ARCHITECTURE rtl OF stsass IS
 	COMPONENT uart_rx
 
 	END COMPONENT;
+	
 	COMPONENT uart_tx
-		PORT ();
+		
 	END COMPONENT;
+	
 	COMPONENT entrada_dados
-		PORT ();
+		
 	END COMPONENT;
+	
 	COMPONENT saida_dados
-		PORT ();
+		
 	END COMPONENT;
+	
 BEGIN
 END rtl;
