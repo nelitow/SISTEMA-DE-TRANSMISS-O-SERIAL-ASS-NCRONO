@@ -3,19 +3,16 @@ USE ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 ENTITY gerador_paridade IS
-
 	GENERIC
 	(
 		NUM_DADOS : natural := 9
 	);
-
 	PORT
 	(
 		DATA_IN : IN STD_LOGIC_VECTOR (NUM_DADOS DOWNTO 0);
 		SW_PARITY_TX : IN STD_LOGIC;
 		PARITY : OUT STD_LOGIC_vector(0 downto 0)
 	);
-
 END ENTITY;
 
 ARCHITECTURE v1 OF gerador_paridade IS

@@ -15,6 +15,7 @@ end entity;
 architecture v1 of uart_tx is
 
 signal out_baud: std_logic;
+signal out_parity: std_LOGIC;
 
 component baud_rate IS
  	PORT (
@@ -25,19 +26,32 @@ component baud_rate IS
 		);
 END component;
 
---
-component gerador_paridade IS
+ENTITY gerador_paridade IS
+	GENERIC(
+		NUM_DADOS : natural := 9
+	);
+	PORT(
+		DATA_IN : IN STD_LOGIC_VECTOR (NUM_DADOS DOWNTO 0);
+		SW_PARITY_TX : IN STD_LOGIC;
+		PARITY : OUT STD_LOGIC_vector(0 downto 0)
+	);
+END ENTITY;
 
+component conv_paralelo_serial IS
+    GENERIC (N : INTEGER := 10);
+    PORT (
+        clk, baudrate, parity, rst : IN STD_LOGIC;
+        par_in : IN STD_LOGIC_VECTOR(N - 1 DOWNTO 0);
+        ser_out, sclk_test : OUT STD_LOGIC
+    );
 END component;
-
---
-component conv_paralelo_serial is
-	
-end component;
---
 
 begin
 
 inst1: baud_rate
 	port map(clk50mhz, rst , sw_baund_tx , out_baud);
+deseri: conv_paralelo_serial
+	port map(clk50mhz, out_baud, out_parity, rst, data_in, ser_out, open);
+gerador: gerador_paridade
+	port map(data_in, sw_PARITY_TX, out_parity);
 end architecture;
