@@ -55,7 +55,13 @@ ARCHITECTURE rtl OF stsass IS
 	END COMPONENT;
 	
 	COMPONENT saida_dados
-		
+		port(
+			data_in: in std_logic_vector(10 downto 0);
+			ser_in: in std_logic;
+			ssd_NRA, ssd_NRB: out std_logic_vector(6 downto 0);
+			ser_out: out std_logic;
+			led_dado,data_rx: out std_logic_vector(7 downto 0)
+		);
 	END COMPONENT;
 	
 BEGIN
@@ -68,4 +74,8 @@ inst2: uart_rx
 
 inst3: entrada_dados
 	port map(sw_nrb, data_in, hex_txa, hex_txb, led_tx, dados_tx);
+	
+inst4: saida_dados
+	port map(saida_par_out, ser_in, hex_rxa, hex_rxb, ser_by, led_rx, data_out);
+	
 END rtl;
