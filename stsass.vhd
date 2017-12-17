@@ -12,7 +12,7 @@ ENTITY stsass IS
 		ser_out, ser_by, rx_error : OUT std_logic;
 		hex_txa, hex_txb, hex_rxa, hex_rxb : OUT std_logic_vector(6 DOWNTO 0);
 		data_out : OUT std_logic_vector(7 DOWNTO 0);
-		let_tx, led_rx : OUT std_logic_vector(7 DOWNTO 0)
+		led_tx, led_rx : OUT std_logic_vector(7 DOWNTO 0)
 	);
 END stsass;
 ARCHITECTURE rtl OF stsass IS
@@ -45,7 +45,13 @@ ARCHITECTURE rtl OF stsass IS
 	END COMPONENT;
 	
 	COMPONENT entrada_dados
-		
+		port(
+			NRB: in std_logic_vector(2 downto 0);
+			dados: in std_logic_vector(7 downto 0);
+			ssd_NRA, ssd_NRB: out std_logic_vector(6 downto 0);
+			led_dado: out std_logic_vector(7 downto 0);
+			dados_tx: out std_logic_vector(10 downto 0)
+		);
 	END COMPONENT;
 	
 	COMPONENT saida_dados
@@ -59,4 +65,7 @@ inst1: uart_tx
 	
 inst2: uart_rx
 	port map(sw_parity_rx, clk50MHz, sw_rst, ser_in, sw_baud_rx, saida_par_out, rx_error);
+
+inst3: entrada_dados
+	port map(sw_nrb, data_in, hex_txa, hex_txb, led_tx, dados_tx);
 END rtl;
