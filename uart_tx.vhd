@@ -7,7 +7,7 @@ entity uart_tx is
 		NUM_DADOS : natural := 10
 	);
 port(
-	sw_parit_TX, clk50mhz, rst: in std_logic;
+	sw_parit_TX, clk50mhz, rst , ena: in std_logic;
 	data_in: in std_logic_vector(NUM_DADOS downto 0);
 	sw_baund_tx: in std_logic_vector(1 downto 0);
 	ser_out: out std_logic
@@ -48,7 +48,7 @@ END component;
 component conv_paralelo_serial is
 	 GENERIC (N : INTEGER := 10);
     PORT (
-        clk, baudrate, rst : IN STD_LOGIC;
+        clk, baudrate, rst, enable : IN STD_LOGIC;
 		  parity: IN STD_LOGIC_VECTOR(0 DOWNTO 0);
         par_in : IN STD_LOGIC_VECTOR(N DOWNTO 0);
         ser_out: OUT STD_LOGIC
@@ -63,5 +63,5 @@ inst1: baud_rate
 inst2: gerador_paridade
 	port map(data_in, sw_parit_TX, out_parity);
 inst3: conv_paralelo_serial
-	port map(clk50mhz,out_baud,rst,out_parity, data_in, ser_out);
+	port map(clk50mhz,out_baud,rst,ena,out_parity, data_in, ser_out);
 end architecture;
